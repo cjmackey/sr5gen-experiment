@@ -9,8 +9,8 @@ describe('controllers', function(){
         it("initializes data", inject(function() {
             var scope = {};
             var ctrl = characterCtrl(scope);
-            expect(scope.metatypes.length).toBe(5);
-            expect(scope.blah).toBe('asdf');
+            expect(scope.metatype_choices).toBeTruthy();
+            expect(scope.metatype_choices.length).toBeGreaterThan(4);
         }));
     });
     
