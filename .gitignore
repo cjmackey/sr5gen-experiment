@@ -7,8 +7,13 @@ lib-cov
 *.pid
 *.gz
 
+*concat*
+*min*
+
 pids
 logs
 results
 
 npm-debug.log
+
+node_modules

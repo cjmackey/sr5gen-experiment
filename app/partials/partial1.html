@@ -1,0 +1,98 @@
+
+
+<div class="char-editor">
+  <div class="step-bar">
+    <div class="step-tab" ng-click="goto_step('overview')">
+      Overview
+    </div>
+    <div class="step-tab" ng-click="goto_step('metatype')">
+      Metatype {{character.metatype_priority()}}
+    </div>
+    <div class="step-tab" ng-click="goto_step('attributes')">
+      Attributes {{ character.attributes_priority() }}
+    </div>
+    <div class="step-tab">
+      Magic/Resonance
+    </div>
+    <div class="step-tab">
+      Qualities
+    </div>
+    <div class="step-tab">
+      Skills
+    </div>
+    <div class="step-tab">
+      Resources
+    </div>
+    <div class="step-tab">
+      Karma
+    </div>
+  </div>
+  <div class="step-body">
+    
+    <div class="step-overview" ng-show="is_active_step('overview')">
+      Name: <input type="text" ng-model="character.name" ng-change="character_name_change()" /><br />
+      Metatype: {{character.metatype() || 'undecided'}}
+      blah blah blah
+      <p>blah blah blah</p>
+    </div>
+
+    <div class="step-metatype" ng-show="is_active_step('metatype')">
+      Metatype!
+      <div data-ng-repeat="metatype_choice in metatype_choices">
+        <div class="metatype-choice clickable" ng-click="character.choose_metatype(metatype_choice)">
+          {{metatype_choice.priority}} {{metatype_choice.str()}}
+        </div>
+      </div>
+    </div>
+
+    <div class="step step-attributes" ng-show="is_active_step('attributes')">
+      <div ng-hide="character.metatype()">
+        You must choose a metatype first :/
+      </div>
+      <table ng-show="character.metatype()">
+        <thead>
+          <tr>
+            <th></th>
+            <th>BOD</th>
+            <th>AGI</th>
+            <th>REA</th>
+            <th>STR</th>
+            <th>WIL</th>
+            <th>LOG</th>
+            <th>INT</th>
+            <th>CHA</th>
+            <th>EDG</th>
+            <th>MAG</th>
+            <th>RES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Score</td>
+            <td data-ng-repeat="ix in [0,1,2,3,4,5,6,7,8,9,10]">
+              {{character.attribute_info_string(ix)}}
+            </td>
+          </tr>
+          <tr>
+            <td>Points</td>
+            <td data-ng-repeat="ix in [0,1,2,3,4,5,6,7,8,9,10]">
+              <input type="text" size="1" ng-model="character.attribute_point_allocation[ix]" />
+            </td>
+          </tr>
+          <!-- TODO: karma! -->
+        </tbody>
+      </table>
+      <div data
+    </div>
+    
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
