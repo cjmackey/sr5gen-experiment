@@ -1,4 +1,3 @@
-'use strict';
 
 /* Controllers */
 
@@ -17,7 +16,7 @@ function Metatype(name) {
     this.attribute_mins = [1,1,1,1,1,1,1,1,1];
     this.attribute_maxs = [6,6,6,6,6,6,6,6,6];
 }
-Metatype.prototype.equals = function(x) { return this.name === x.name; }
+Metatype.prototype.equals = function(x) { return this.name === x.name; };
 Metatype.human = new Metatype('Human');
 Metatype.human.attribute_mins[8] = 2;
 Metatype.human.attribute_maxs[8] = 7;
@@ -35,12 +34,12 @@ var MetatypePriorityChoice = inherit(PriorityChoice, function(priority, metatype
     this.metatype = metatype || null;
     this.points = points;
 });
-MetatypePriorityChoice.prototype.str = function() { return this.metatype.name + " (" + this.points + ")"; }
+MetatypePriorityChoice.prototype.str = function() { return this.metatype.name + " (" + this.points + ")"; };
 
 MetatypePriorityChoice.prototype.equals = function(x) {
     return (this.priority === x.priority &&
             this.metatype.equals(x.metatype));
-}
+};
 
 
 
@@ -50,10 +49,10 @@ function Character() {
     this.attribute_point_allocation = [0,0,0,0,0,0,0,0,0,0,0];
     this.attribute_karma_allocation = [0,0,0,0,0,0,0,0,0,0,0];
 }
-Character.prototype.metatype = function() { return (this.metatype_choice || {metatype: null}).metatype; }
-Character.prototype.metatype_priority = function() { return (this.metatype_choice || {priority:null}).priority; }
-Character.prototype.choose_metatype = function(metatype_choice) { this.metatype_choice = metatype_choice; }
-Character.parseInt = function(x) { var tmp = parseInt(x || '0'); return isNaN(tmp) ? 0 : tmp; }
+Character.prototype.metatype = function() { return (this.metatype_choice || {metatype: null}).metatype; };
+Character.prototype.metatype_priority = function() { return (this.metatype_choice || {priority:null}).priority; };
+Character.prototype.choose_metatype = function(metatype_choice) { this.metatype_choice = metatype_choice; };
+Character.parseInt = function(x) { var tmp = parseInt(x, 10); return isNaN(tmp) ? 0 : tmp; };
 Character.prototype.attributes = function() {
     if(!this.metatype()) { return null; }
     var arr = [];
@@ -61,7 +60,7 @@ Character.prototype.attributes = function() {
         arr.push(this.attribute(i));
     }
     return arr;
-}
+};
 Character.prototype.attribute = function(i) {
     if(!this.metatype()) { return null; }
     var x = Character.parseInt(this.attribute_point_allocation[i]);
@@ -69,16 +68,16 @@ Character.prototype.attribute = function(i) {
     var min = this.metatype().attribute_mins[i];
     if(min) { x = x + min; }
     return x;
-}
+};
 Character.prototype.attribute_info_string = function(i) {
     if(!this.metatype()) { return null; }
     // NOTE: someday, add in augmented attributes like b(a)/m
     if(i <= 8){
         return this.attribute(i) + '/' + this.metatype().attribute_maxs[i];
     }else{
-        return this.attribute(i) + '/' + 6
+        return this.attribute(i) + '/' + 6;
     }
-}
+};
 Character.prototype.attributes_priority = function() {
     if(!this.metatype()) { return null; }
     var attr_points = 0;
@@ -98,12 +97,10 @@ Character.prototype.attributes_priority = function() {
     }else{
         return '!';
     }
-}
+};
 
 
 function characterCtrl($scope, $http, $window) {
-    $scope.blah = 'asdf'
-    $scope.some_var = 'hello'
     $scope.character = new Character();
     $scope.active_step = 'overview';
     

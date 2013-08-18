@@ -1,14 +1,21 @@
 module.exports = function(grunt) {
     
+    var standard_tasks = ['jshint', 'concat', 'uglify', 'cssmin'];
+    
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            all: ['Gruntfile.js', 'app/js/**.js']
+            all: {
+                options: {
+                    '-W117': true,
+                },
+                src: ['Gruntfile.js', 'app/js/**.js']
+            }
         },
         concat: {
             js: {
-                src: 'app/js/**.js',
+                src: ['app/use_strict.js','app/js/**.js'],
                 dest: 'app/js.concat.js'
             },
             css: {
@@ -27,7 +34,11 @@ module.exports = function(grunt) {
                 src: 'app/css.concat.css',
                 dest: 'app/css.concat.min.css'
             }
-        }
+        },
+        watch: {
+            files: ['app/js/**.js','app/css/**.css'],
+            tasks: standard_tasks,
+        },
     });
     
     // Load the plugin that provides the "uglify" task.
@@ -36,9 +47,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-csslint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     
     
-    // Default task(s).
-//    grunt.registerTask('default', ['uglify']);
-    grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
+    grunt.registerTask('default', standard_tasks);
 };
