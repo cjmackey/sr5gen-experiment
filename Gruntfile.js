@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     
-    var standard_tasks = ['jshint', 'concat', 'uglify', 'cssmin'];
+    var standard_tasks = ['jshint', 'concat', 'uglify', 'cssmin', 'exec:serve'];
     
     // Project configuration.
     grunt.initConfig({
@@ -36,9 +36,14 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            files: ['app/js/**.js','app/css/**.css'],
+            files: ['app/js/**.js','app/css/**.css','scripts/serve.rb'],
             tasks: standard_tasks,
         },
+        exec: {
+            serve: {
+                command: './scripts/serve.rb'
+            }
+        }
     });
     
     // Load the plugin that provides the "uglify" task.
@@ -48,6 +53,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-csslint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-exec');
     
     
     grunt.registerTask('default', standard_tasks);
