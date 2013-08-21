@@ -18,13 +18,21 @@ module.exports = function(grunt) {
                 src: 'app/async.js',
                 dest: 'app/async.js.gz'
             },
-            js_angular: {
+            js_angular_min: {
                 src: 'app/lib/angular/angular.min.js',
                 dest: 'app/lib/angular/angular.min.js.gz'
             },
-            js_concat: {
+            js_angular: {
+                src: 'app/lib/angular/angular.js',
+                dest: 'app/lib/angular/angular.js.gz'
+            },
+            js_concat_min: {
                 src: 'app/js.concat.min.js',
-                dest: 'app/js.conccat.min.js.gz'
+                dest: 'app/js.concat.min.js.gz'
+            },
+            js_concat: {
+                src: 'app/js.concat.js',
+                dest: 'app/js.concat.js.gz'
             }
         },
         concat: {
