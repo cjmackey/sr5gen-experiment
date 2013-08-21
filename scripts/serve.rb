@@ -106,11 +106,14 @@ proxy_buffers           32 4k;
     access_log     #{current_dir}/logs/nginx/nginx_www.access.log;
     error_log     #{current_dir}/logs/nginx/nginx_www.error.log;
     
+    
     location /node {
       proxy_pass http://nodebackend;
     }
     
     location / {
+      gzip_static on;
+      gzip_vary   on;
       autoindex on;
       root  #{current_dir}/app;
     }

@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     
-    var standard_tasks = ['jshint', 'concat', 'uglify', 'cssmin', 'exec:serve'];
+    var standard_tasks = ['jshint', 'concat', 'uglify', 'cssmin', 'compress', 'exec:serve'];
     
     // Project configuration.
     grunt.initConfig({
@@ -13,13 +13,27 @@ module.exports = function(grunt) {
                 src: ['Gruntfile.js', 'app/js/**.js']
             }
         },
+        compress: {
+            js_async: {
+                src: 'app/async.js',
+                dest: 'app/async.js.gz'
+            },
+            js_angular: {
+                src: 'app/lib/angular/angular.min.js',
+                dest: 'app/lib/angular/angular.min.js.gz'
+            },
+            js_concat: {
+                src: 'app/js.concat.min.js',
+                dest: 'app/js.conccat.min.js.gz'
+            }
+        },
         concat: {
             js: {
                 src: ['app/use_strict.js','app/js/**.js'],
                 dest: 'app/js.concat.js'
             },
             css: {
-                src: 'app/css/**.css',
+                src: ['app/css/**.css'],
                 dest: 'app/css.concat.css'
             }
         },
@@ -49,6 +63,7 @@ module.exports = function(grunt) {
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-csslint');
