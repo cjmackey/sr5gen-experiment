@@ -58,7 +58,7 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            files: ['app/js/**.js','app/css/**.css','scripts/serve.rb'],
+            files: ['app/js/**.js','app/css/**.css','scripts/serve.rb','app/*html','server/main.js'],
             tasks: standard_tasks,
         },
         exec: {

@@ -3,9 +3,16 @@
 begin
   puts 'killing old nginx'
   system("kill #{File.read('logs/nginx/nginx.pid').strip}")
-  sleep 1
 rescue
 end
+
+begin
+  puts 'killing old node'
+  system("kill #{File.read('logs/server/server.pid').strip}")
+rescue
+end
+
+sleep 1
 
 current_dir = `pwd`.strip
 
@@ -98,7 +105,10 @@ proxy_buffers           32 4k;
   upstream nodebackend {
     server 127.0.0.1:8081;
   }
-  
+  map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+  }
   
   server {
     listen        8080;
@@ -109,6 +119,21 @@ proxy_buffers           32 4k;
     
     location /node {
       proxy_pass http://nodebackend;
+    }
+    
+    location /socket.io {
+      proxy_pass http://nodebackend;
+      
+      proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+
+        proxy_redirect off;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
     }
     
     location / {
@@ -127,3 +152,9 @@ File.open('config/nginx.conf', 'w') { |f| f.write(s) }
 
 puts 'starting new nginx'
 system("nginx -c #{current_dir}/config/nginx.conf -p #{current_dir}/")
+
+Process.fork do
+  system("node server/main.js >> logs/server/server.log")
+end
+
+sleep 1
