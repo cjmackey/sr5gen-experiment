@@ -96,7 +96,7 @@ proxy_buffers           32 4k;
  
   
   upstream nodebackend {
-    server 127.0.0.1;
+    server 127.0.0.1:8081;
   }
   
   
