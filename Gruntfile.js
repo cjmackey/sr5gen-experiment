@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
     
     var standard_tasks = ['jshint', 'concat', 'uglify', 'cssmin', 'compress', 'exec:serve'];
+    var common_files = ['common/things.js'];
     
     // Project configuration.
     grunt.initConfig({
@@ -10,7 +11,7 @@ module.exports = function(grunt) {
                 options: {
                     '-W117': true,
                 },
-                src: ['Gruntfile.js', 'app/js/**.js']
+                src: ['Gruntfile.js', 'app/js/**.js', 'common/**.js', 'server/js/**.js']
             }
         },
         compress: {
@@ -36,9 +37,13 @@ module.exports = function(grunt) {
             }
         },
         concat: {
-            js: {
-                src: ['app/use_strict.js','app/js/**.js'],
+            js_client: {
+                src: ['app/use_strict.js'].concat(common_files.concat(['app/js/**.js'])),
                 dest: 'app/js.concat.js'
+            },
+            js_server: {
+                src: ['app/use_strict.js'].concat(common_files.concat(['server/js/**.js'])),
+                dest: 'server/js.concat.js'
             },
             css: {
                 src: ['app/css/**.css'],
@@ -58,7 +63,8 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            files: ['app/js/**.js','app/css/**.css','scripts/serve.rb','app/*html','server/main.js'],
+            files: ['app/js/**.js','app/css/**.css','server/js/**.js',
+                    'scripts/**','app/*html'],
             tasks: standard_tasks,
         },
         exec: {

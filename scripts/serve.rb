@@ -154,7 +154,7 @@ puts 'starting new nginx'
 system("nginx -c #{current_dir}/config/nginx.conf -p #{current_dir}/")
 
 Process.fork do
-  system("node server/main.js >> logs/server/server.log")
+  system("node server/js.concat.js >> logs/server/server.log")
 end
 
 sleep 1
