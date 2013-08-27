@@ -2,6 +2,7 @@ module.exports = function(grunt) {
     
     var standard_tasks = ['jshint', 'concat', 'uglify', 'cssmin', 'compress', 'exec:serve'];
     var common_files = ['common/things.js'];
+    var server_files = ['server/js/requires.js', 'server/js/main.js'];
     
     // Project configuration.
     grunt.initConfig({
@@ -42,7 +43,7 @@ module.exports = function(grunt) {
                 dest: 'app/js.concat.js'
             },
             js_server: {
-                src: ['app/use_strict.js'].concat(common_files.concat(['server/js/**.js'])),
+                src: ['app/use_strict.js'].concat(common_files.concat(server_files)),
                 dest: 'server/js.concat.js'
             },
             css: {

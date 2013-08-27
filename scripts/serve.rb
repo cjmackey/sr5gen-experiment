@@ -1,14 +1,19 @@
 #!/usr/bin/env ruby
 
-begin
-  puts 'killing old nginx'
-  system("kill #{File.read('logs/nginx/nginx.pid').strip}")
-rescue
+$using_nginx = !File.exists?('no-nginx')
+
+if $using_nginx
+  begin
+    puts 'killing old nginx'
+    system("kill #{File.read('logs/nginx/nginx.pid').strip}")
+  rescue
+  end
 end
 
 begin
   puts 'killing old node'
   system("kill #{File.read('logs/server/server.pid').strip}")
+  system("rm -f logs/server/server.pid")
 rescue
 end
 
@@ -116,6 +121,7 @@ proxy_buffers           32 4k;
     access_log     #{current_dir}/logs/nginx/nginx_www.access.log;
     error_log     #{current_dir}/logs/nginx/nginx_www.error.log;
     
+    # try_files $uri /index.html;
     
     location /node {
       proxy_pass http://nodebackend;
@@ -136,11 +142,19 @@ proxy_buffers           32 4k;
         proxy_set_header Connection $connection_upgrade;
     }
     
+    location /user {
+      rewrite ^.*$ /index.html ;
+#      alias #{current_dir}/app/ ; #index.html ;
+    }
+    location ~ ^/character.*$ {
+      alias #{current_dir}/app/index.html ;
+    }
+    
     location / {
       gzip_static on;
       gzip_vary   on;
       autoindex on;
-      root  #{current_dir}/app;
+      root  #{current_dir}/app ;
     }
     
   }
@@ -150,8 +164,10 @@ EOF
 
 File.open('config/nginx.conf', 'w') { |f| f.write(s) }
 
-puts 'starting new nginx'
-system("nginx -c #{current_dir}/config/nginx.conf -p #{current_dir}/")
+if $using_nginx
+  puts 'starting new nginx'
+  system("nginx -c #{current_dir}/config/nginx.conf -p #{current_dir}/")
+end
 
 Process.fork do
   system("node server/js.concat.js >> logs/server/server.log")

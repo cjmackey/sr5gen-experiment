@@ -32,6 +32,19 @@ function inherit(Parent, constructor){
     return wrapping_constructor;
 }
 
+function User(email, _id) {
+    this.email = email;
+    this._id = _id;
+}
+User.prototype.to_object = function() { return this; };
+User.from_object = function(obj) {
+    var u = new User();
+    u._id = obj._id;
+    u.email = obj.email;
+    return u;
+};
+
+
 function Metatype(name) {
     this.name = name;
     this.attribute_mins = [1,1,1,1,1,1,1,1,1];
@@ -116,6 +129,8 @@ MetatypePriorityChoice.prototype.equals = function(x) {
 
 
 function Character() {
+    this.user_id = null;
+    this._id = null;
     this.name = null;
     this.metatype_choice = null;
     this.attribute_point_allocation = [0,0,0,0,0,0,0,0,0,0,0];
@@ -124,6 +139,8 @@ function Character() {
 Character.prototype.to_object = function() { return this; };
 Character.from_object = function(obj) {
     var c = new Character();
+    c.user_id = obj.user_id;
+    c._id = obj._id;
     c.name = obj.name;
     c.metatype_choice = MetatypePriorityChoice.from_object(obj.metatype_choice);
     c.attribute_point_allocation = obj.attribute_point_allocation;

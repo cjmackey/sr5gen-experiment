@@ -6,25 +6,12 @@
   <link rel="stylesheet" href="css.concat.css"/>
 </head>
 <body>
-  <!--ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-  </ul-->
-
-  <div ng-view></div>
-
-
   
-
+  <div ng-view></div>
+  
   <script src="/socket.io/socket.io.js"></script>
-  <script src="lib/angular/angular.min.js"></script>
-  <script src="js.concat.min.js"></script>
-  <!--script>
-    var socket = io.connect('http://localhost:8080');
-    socket.on('news', function (data) {
-      console.log(data);
-      socket.emit('my other event', { my: 'data' });
-    });
-  <script-->
+  <script src="/lib/angular/angular.min.js"></script>
+  <script src="/async.js"></script>
+  <script src="/js.concat.min.js"></script>
 </body>
 </html>

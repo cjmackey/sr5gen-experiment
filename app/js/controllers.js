@@ -1,8 +1,7 @@
 
 /* Controllers */
 
-function characterCtrl($scope, $routeParams, $http, $window) {
-    $scope.character = new Character();
+function characterCtrl($scope, $routeParams, $http, $window, socket, localStorage, session) {
     $scope.active_step = 'overview';
     
     $scope.metatype_choices = [
@@ -39,12 +38,42 @@ function characterCtrl($scope, $routeParams, $http, $window) {
     
     $scope.goto_step = function(x) { $scope.active_step = x; };
     $scope.is_active_step = function(x) { return $scope.active_step === x; };
-    if($window) { updateTitle(); }
+    
+    console.log($routeParams);
+    $scope.character_id = $routeParams.id;
+    $scope.character = null;
+    async.series([
+        function(callback) {
+            session.sync(socket, localStorage, function(){
+                return callback();
+            });
+        },
+        function(callback) {
+            //todo: get info from server based on character id
+            return callback();
+        },
+        function(callback) {
+            $scope.character = new Character();
+            if($window) { updateTitle(); }
+        }
+    ]);
+    
 }
 
 
+function userCtrl($scope, $routeParams, $http, $window, socket, localStorage, session) {
+    session.sync(socket, localStorage, function(){
+    });
+    console.log($routeParams);
+}
+
+function rootCtrl($scope, $routeParams, $http, $window, socket, localStorage, session) {
+    session.sync(socket, localStorage, function(){
+    });
+    console.log($routeParams);
+}
+
 angular.module('myApp.controllers', []).
-    controller('CharacterCtrl', ['$scope', '$routeParams', '$http', '$window', characterCtrl])
-    .controller('MyCtrl2', [function() {
-        
-    }]);
+    controller('CharacterCtrl', ['$scope', '$routeParams', '$http', '$window', 'socket', 'localStorage', 'session', characterCtrl]).
+    controller('UserCtrl', ['$scope', '$routeParams', '$http', '$window', 'socket', 'localStorage', 'session', userCtrl]).
+    controller('RootCtrl', ['$scope', '$routeParams', '$http', '$window', 'socket', 'localStorage', 'session', rootCtrl]);
