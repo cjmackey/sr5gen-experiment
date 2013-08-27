@@ -4,7 +4,31 @@
 function sessionInfo() {
     this.session_id = null;
     this.user = null;
+    this.logged_in = false;
+    this.logged_out = true;
 }
+sessionInfo.prototype.enscope = function(socket, storage, scope, $route, $location, ctrl){
+    self = this;
+    scope.session = self;
+    scope.log_out = function(){
+        self.log_out(socket, storage, function(){
+            scope.$apply();
+            //$route.reload();
+        });
+    };
+    scope.log_in = function(){
+        self.log_in(socket, storage, scope.log_in_email, scope.log_in_password, function(){
+            $location.path('/user/'+self.user._id);
+            scope.$apply();
+        });
+    };
+    scope.sign_up = function(){
+        self.sign_up(socket, storage, scope.sign_up_email, scope.sign_up_password, scope.sign_up_password_confirmation, function(){
+            $location.path('/user/'+self.user._id);
+            scope.$apply();
+        });
+    };
+};
 sessionInfo.prototype.create_new_session = function(socket, storage, callback) {
     console.log('creating session');
     self = this;
@@ -17,6 +41,14 @@ sessionInfo.prototype.create_new_session = function(socket, storage, callback) {
         return callback();
     });
 };
+sessionInfo.prototype.log_out = function(socket, storage, callback) {
+    this.user = null;
+    this.logged_out = true;
+    this.logged_in = false;
+    // TODO: someday, let's make this clear the user part of the
+    // session in the db rather than making a new session.
+    this.create_new_session(socket, storage, callback);
+};
 sessionInfo.prototype.log_in = function(socket, storage, email, password, callback) {
     self = this;
     socket.emit('log in', {session_id:self.session_id,
@@ -24,6 +56,8 @@ sessionInfo.prototype.log_in = function(socket, storage, email, password, callba
                            password:password});
     socket.once('log on success', function(data) {
         self.user = User.from_object(data);
+        this.logged_in = true;
+        this.logged_out = false;
         storage.sr_session = JSON.stringify(self);
         console.log('logged in');
     });
@@ -52,6 +86,8 @@ sessionInfo.prototype.sign_up = function(socket, storage, email, password, passw
                              password_confirmation:password_confirmation});
     socket.once('user created', function(data){
         self.user = User.from_object(data);
+        this.logged_in = true;
+        this.logged_out = false;
         storage.sr_session = JSON.stringify(self);
         console.log('user created, logged in');
         return callback();

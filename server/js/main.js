@@ -58,11 +58,14 @@ function main() {
                         if(arr.length < 1) {
                             return socket.emit('error', 'no user with that email');
                         }
-                        user = arr[0];
+                        var user = arr[0];
+                        console.log('log in attempt');
                         bcrypt.compare(data.password, user.password_hash, function(err, result){
                             if(!result) {
+                                console.log('log in failure');
                                 return socket.emit('log on failure');
                             }
+                            console.log('log in success');
                             session_collection.update({session_id : data.session_id},
                                                       {$set:{email:data.email}},
                                                       {safe:true},

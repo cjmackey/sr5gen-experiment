@@ -1,7 +1,9 @@
 
 /* Controllers */
 
-function characterCtrl($scope, $routeParams, $http, $window, socket, localStorage, session) {
+function characterCtrl($scope, $routeParams, $http, $window, $route, $location, socket, localStorage, session) {
+    session.enscope(socket, localStorage, $scope, $route, $location, this);
+    $scope.session = session;
     $scope.active_step = 'overview';
     
     $scope.metatype_choices = [
@@ -61,19 +63,24 @@ function characterCtrl($scope, $routeParams, $http, $window, socket, localStorag
 }
 
 
-function userCtrl($scope, $routeParams, $http, $window, socket, localStorage, session) {
+function userCtrl($scope, $routeParams, $http, $window, $route, $location, socket, localStorage, session) {
+    session.enscope(socket, localStorage, $scope, $route, $location, this);
+    $scope.session = session;
     session.sync(socket, localStorage, function(){
     });
     console.log($routeParams);
 }
 
-function rootCtrl($scope, $routeParams, $http, $window, socket, localStorage, session) {
+function rootCtrl($scope, $routeParams, $http, $window, $route, $location, socket, localStorage, session) {
+    session.enscope(socket, localStorage, $scope, $route, $location, this);
     session.sync(socket, localStorage, function(){
     });
     console.log($routeParams);
+    console.log($scope);
+    console.log($scope.session);
 }
 
 angular.module('myApp.controllers', []).
-    controller('CharacterCtrl', ['$scope', '$routeParams', '$http', '$window', 'socket', 'localStorage', 'session', characterCtrl]).
-    controller('UserCtrl', ['$scope', '$routeParams', '$http', '$window', 'socket', 'localStorage', 'session', userCtrl]).
-    controller('RootCtrl', ['$scope', '$routeParams', '$http', '$window', 'socket', 'localStorage', 'session', rootCtrl]);
+    controller('CharacterCtrl', ['$scope', '$routeParams', '$http', '$window', '$route', '$location', 'socket', 'localStorage', 'session', characterCtrl]).
+    controller('UserCtrl', ['$scope', '$routeParams', '$http', '$window', '$route', '$location', 'socket', 'localStorage', 'session', userCtrl]).
+    controller('RootCtrl', ['$scope', '$routeParams', '$http', '$window', '$route', '$location', 'socket', 'localStorage', 'session', rootCtrl]);
