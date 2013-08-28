@@ -1,1 +1,14 @@
 user
+
+{{user_name}}<br />
+{{user_id}}<br />
+{{session.user._id}}<br />
+
+<div ng-show="session.user._id == user_id">
+  <form>
+    Create a character<br />
+    <label for="name">Name:</label>
+    <input name="name" type="text" ng-model="new_character_name" />
+    <button ng-click="create_character()">Create!</button>
+  </form>
+</div>

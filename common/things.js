@@ -21,6 +21,18 @@ Array.prototype.equals = function(x) {
     return true;
 };
 
+function cleanse_object(o){
+    if(!(typeof o === 'object' && o)) { return o; }
+    for(var k in o){
+        if(typeof k === 'string' && k.indexOf('$') != -1) {
+            delete o[k];
+        }else{
+            cleanse_object(o[k]);
+        }
+    }
+    return o;
+}
+
 
 function inherit(Parent, constructor){
     var wrapping_constructor = function() {
@@ -51,7 +63,9 @@ function Metatype(name) {
     this.attribute_maxs = [6,6,6,6,6,6,6,6,6];
 }
 Metatype.prototype.to_object = function() {
-    return this;
+    return {name:this.name,
+            attribute_mins:this.attribute_mins,
+            attribute_maxs:this.attribute_maxs};
 };
 Metatype.from_object = function(obj) {
     var m = new Metatype(obj.name);
@@ -103,7 +117,9 @@ function PriorityChoice(priority) {
     this.priority = priority || 'A';
 }
 PriorityChoice.prototype.equals = function(x) { return this.priority === x.priority; };
-PriorityChoice.prototype.to_object = function() { return this; };
+PriorityChoice.prototype.to_object = function() {
+    return this;
+};
 PriorityChoice.from_object = function(obj) {
     return new PriorityChoice(obj.priority);
 };
@@ -111,6 +127,9 @@ var MetatypePriorityChoice = inherit(PriorityChoice, function(priority, metatype
     this.metatype = metatype || null;
     this.points = points;
 });
+MetatypePriorityChoice.prototype.to_object = function(){
+    return {priority:this.priority, metatype:this.metatype, points:this.points};
+};
 MetatypePriorityChoice.prototype.equals = function(x) {
     return (this.priority === x.priority &&
             this.metatype.equals(x.metatype)
@@ -142,7 +161,9 @@ Character.from_object = function(obj) {
     c.user_id = obj.user_id;
     c._id = obj._id;
     c.name = obj.name;
-    c.metatype_choice = MetatypePriorityChoice.from_object(obj.metatype_choice);
+    if(obj.metatype_choice){
+        c.metatype_choice = MetatypePriorityChoice.from_object(obj.metatype_choice);
+    }
     c.attribute_point_allocation = obj.attribute_point_allocation;
     c.attribute_karma_allocation = obj.attribute_karma_allocation;
     return c;

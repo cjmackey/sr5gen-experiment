@@ -49,6 +49,18 @@ module.exports = function(grunt) {
             css: {
                 src: ['app/css/**.css'],
                 dest: 'app/css.concat.css'
+            },
+            root_html: {
+                src: ['app/login_fragment.html', 'app/partials/root.html'],
+                dest: 'app/partials/root.concat.html'
+            },
+            user_html: {
+                src: ['app/login_fragment.html', 'app/partials/user.html'],
+                dest: 'app/partials/user.concat.html'
+            },
+            character_html: {
+                src: ['app/login_fragment.html', 'app/partials/character.html'],
+                dest: 'app/partials/character.concat.html'
             }
         },
         uglify: {
@@ -64,8 +76,9 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            files: ['app/js/**.js','app/css/**.css','server/js/**.js',
-                    'scripts/**','app/*html'],
+            files: ['app/js/**.js','app/css/**.css','server/js/**.js','common/**',
+                    'scripts/**','app/*html',
+                    'app/partials/user.html','app/partials/root.html','app/partials/character.html'],
             tasks: standard_tasks,
         },
         exec: {

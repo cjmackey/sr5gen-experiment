@@ -5,6 +5,7 @@ var npid = require('npid');
 
 var socket_io = require('socket.io');
 var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 var util = require('util');
 var format = util.format;
 
